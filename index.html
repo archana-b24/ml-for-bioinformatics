@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ML Visual Atlas</title>
+  <meta name="description" content="Machine-learning concepts explained visually, then applied end-to-end to bulk, single-cell and spatial transcriptomics, plus the newest methods from industry, each replicated on mock data.">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="vendor/d3.v7.9.0.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="Toggle topic list">☰</button>
+    <div class="brand">ML Visual Atlas <span>· see it to understand it</span></div>
+    <nav class="tabs" role="tablist" id="tabs"></nav>
+    <button class="icon-btn" id="themeBtn" aria-label="Toggle dark mode">◐</button>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <input class="search" id="search" type="search" placeholder="Filter topics…" aria-label="Filter topics">
+      <div id="nav"></div>
+    </aside>
+    <main id="main" tabindex="-1"></main>
+  </div>
+  <div class="tooltip" id="tooltip"></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

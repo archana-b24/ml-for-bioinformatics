@@ -1,0 +1,20 @@
+# DEV.md: key decisions
+
+Only decisions that shape the project go here, each with a one-line *why*. Day-to-day changes belong in git history.
+
+| # | Date | Decision | Why |
+|---|------|----------|-----|
+| 1 | 2026-11-12 | **Static site (HTML + ES modules + d3) on GitHub Pages**, not Streamlit | Interactive visuals have to respond instantly in the browser: sliders, animations, live training. GitHub Pages is free forever, never sleeps, and needs no server. |
+| 2 | 2026-11-12 | **No build step, no framework.** Vanilla JS modules plus d3 v7.9.0, vendored in `vendor/` | Any page can be read and edited directly, and there's no npm toolchain to maintain. Vendoring means no CDN dependency. |
+| 3 | 2026-11-12 | **One module per page, lazy-loaded.** `js/registry.js` is the single source of truth for navigation | Pages are independent, so adding a topic means adding a file and a registry line. The first load stays small. |
+| 4 | 2026-11-12 | **A fixed page anatomy:** intuition → interactive figure → what to notice → how it works → (math) → in biology → pitfalls → see also | Every page is predictable to revisit. The structure is the learning method. Contract: `docs/AUTHORING.md`. |
+| 5 | 2026-11-12 | **Toy computations run live in JS; heavy omics computations are precomputed in Python** (`scripts/*.py` → `data/*.json`) | Concepts need instant feedback. Omics steps (lasso paths, nested CV, UMAP) need sklearn-grade correctness. |
+| 6 | 2026-11-12 | **One shared mock study** (`scripts/mock_biology.py`): an anti-PD-1 NSCLC cohort with 3 immune phenotypes, a planted IFN-γ predictive module, a CAF/TGF-β exclusion module, and a prognostic-but-not-predictive proliferation module | Bulk, single-cell and spatial pages then tell one coherent story: bulk finds the signal, single-cell finds which cells carry it, spatial finds where they are. The planted traps make the pitfalls visible. |
+| 7 | 2026-11-12 | **Colours are CSS tokens only**: a validated 8-slot categorical palette in fixed order, a diverging blue–grey–red scale, and selected light and dark themes | Dark mode and colour-blind safety come for free, and charts look like one system. |
+| 8 | 2026-11-12 | **Tab 3 content comes from a literature brief** (`docs/frontier_research.md`). Each method is a *teaching toy* with a citation and honest caveats | The aim is to show the mechanism, not reproduce the papers' numbers. Vendor claims are labelled as such. |
+| 9 | 2026-11-12 | **Zero cost:** no paid hosting, no API keys, no LLM calls from the site | The same rule as the lung atlas. |
+| 10 | 2026-11-12 | **Python env** = `uv` venv at `.venv` (py3.12: numpy, scipy, scikit-learn), with caches on /storage via `storage_env.sh` | The root disk is full. The stdlib `venv` had no pip. |
+| 11 | 2026-11-12 | **QA** = `scripts/check_pages.py`: headless Chromium (Playwright from `~/my_env`) loads every route and fails on console errors | Catches broken pages without a JS toolchain. |
+| 12 | 2026-11-13 | **Every omics page opens with `stepCard()`** (question, data, method, verdict ML / statistics / both + why). The overview map's `VERDICT` table must match each page's card | The "ML or statistics?" judgement is the point of Tab 2, so it must be explicit and consistent everywhere. |
+| 13 | 2026-11-13 | **Prose numbers are computed from the data at render time**, not typed in | Data gets regenerated; hard-coded numbers silently go stale. |
+| 14 | 2026-11-13 | **Simulation fixes favour honest stories over planted wins**: e.g. Harmony re-implemented faithfully, donor effect reduced so batches *can* mix, Moran's I uses z-score p-values (Squidpy `pval_z_sim`); results that disagree with the plan (pseudobulk power, exhaustion direction) are explained on the page, not tuned away | The site is for understanding, and a tuned-to-plan toy teaches the wrong lesson. |
