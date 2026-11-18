@@ -42,3 +42,16 @@ export default async function render(main, ctx) { ... }
   - Every number you state in prose must be true for the figure as rendered (it is seeded).
 - **Honesty:** for frontier methods, cite the source (a real URL from `docs/frontier_research.md`), separate the authors' claims from independent benchmarks, and label each mini-replication as a teaching toy, not a reproduction of the paper's numbers.
 - **Testing:** with the local server running, run `~/my_env/bin/python scripts/check_pages.py --only <id1,id2>`. It must print `OK`, with no console errors. Use `--shots <dir>` to screenshot pages, then look at the screenshots.
+
+## Lesson pages (the 2026-11 rewrite)
+
+The rewrite replaces the one-figure pages with long-form **lessons**. Template page: `js/topics/logistic-regression.js`. Old pages move to `js/archive/<dir>/` (imports become `../../lib/`), out of the navigation.
+
+- **Arc** (`js/lib/lesson.js` → `ARC`, rendered by `lessonNav()` + `chapter()`): six chapters: What is it → Why we need it → Where it is used → **How it works** → Pitfalls → Recap (with Python/R `code()`). "How it works" is a single chapter of numbered `rung()` steps. Worked examples, the patient calculator, the interactive lab and "what it means" all live inside those steps, not in chapters of their own. The lab ends with a compact **Try → What you see → What it means** table.
+- **One dataset everywhere:** `loadCohort()` from `js/lib/study.js` (built by `scripts/build_study.py` → `data/study/cohort.json`). It has 180 discovery patients (Centres A and B) and 120 validation patients (Centre C). Open with `studyCard()`. The truth is known: response logit = IFN-γ (+), log2 TMB (+), CAF (−). PD-L1 and CD8 are proxies, proliferation is prognostic only, and centre is confounded. Use these planted facts to show pitfalls.
+- **Build-up ladder:** `rung()` steps. Start from everyday arithmetic on the cohort (counts, a 2×2 table) before any formula.
+- **Lots of examples:** `worked()` boxes with fully computed numbers, `quiz()` self-checks, and `cards()` for use-cases and pitfalls (symptom → why → fix).
+- **Model code:** use the shared fitters in `js/lib/models.js` (`fitLogistic` IRLS + SE, `auc`, `roc`, `confusion`, `standardize`, `stratifiedSplit`).
+- All prose numbers are still computed at render time.
+- **Audience and tone:** the site is an open guide for anyone working in bioinformatics. Use neutral, reference-guide wording, plain and precise, with no colloquialisms or jokey asides (avoid phrasing like "without fooling yourself", "no free lunch", "beautiful"). Address the reader sparingly, and avoid "you/your" in figure labels.
+- **Length:** chapter 4 is the core but should stay compact: about 6 steps, one figure per step, short prose, few self-check questions. Chapters 1–3, 5 and 6 keep their full structure.

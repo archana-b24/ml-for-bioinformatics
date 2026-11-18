@@ -1,5 +1,5 @@
 // Hash router: #/<tab>/<topic>. Topic modules are lazy-imported so the first load stays small.
-import { TABS, allItems } from './registry.js';
+import { TABS, ARCHIVE, allItems } from './registry.js';
 import { el, stopAll } from './lib/ui.js';
 
 const $ = (s) => document.querySelector(s);
@@ -69,6 +69,7 @@ function home(tab) {
 let token = 0;
 async function route() {
   stopAll(); // cancel animations from the previous page
+  if (location.hash.startsWith('#/archive')) return routeArchive();
   const { tab, topicId } = parse();
   drawTabs(tab);
   drawNav(tab, topicId);
@@ -100,6 +101,36 @@ async function route() {
     prev ? el('a', { href: `#/${tab.id}/${prev.id}` }, '← ' + prev.title) : el('span'),
     next ? el('a', { href: `#/${tab.id}/${next.id}` }, next.title + ' →') : el('span')));
   main.focus({ preventScroll: true });
+  window.scrollTo(0, 0);
+}
+
+// Retired pages: #/archive (index) and #/archive/<dir>/<id>. Not shown in the navigation.
+async function routeArchive() {
+  const [, , dir, id] = location.hash.split('/');
+  drawTabs(null); navEl.innerHTML = ''; document.body.classList.remove('nav-open');
+  const my = ++token;
+  main.innerHTML = '';
+  main.append(el('div', { class: 'kicker' }, 'Archive · earlier version of the site'));
+  if (!dir || !id || !(ARCHIVE[dir] || []).some(([i]) => i === id)) {
+    main.append(el('h1', {}, 'Archived pages'));
+    main.append(el('p', { class: 'lede' }, 'Pages from the first version of the site, kept for reference. They are no longer maintained; the current pages are in the tabs above.'));
+    Object.entries(ARCHIVE).forEach(([d, list]) => {
+      main.append(el('h2', {}, { topics: 'ML concepts', omics: 'ML in omics', frontier: 'Frontier methods' }[d] || d));
+      const g = el('div', { class: 'hero-grid' });
+      list.forEach(([i, t]) => g.append(el('a', { class: 'card hero-card', href: `#/archive/${d}/${i}` }, el('div', { class: 't' }, t))));
+      main.append(g);
+    });
+    document.title = 'Archive · ML Visual Atlas';
+    return;
+  }
+  let mod = null;
+  try { mod = await import(`./archive/${dir}/${id}.js`); } catch (e) { console.error(e); }
+  if (my !== token) return;
+  const title = ARCHIVE[dir].find(([i]) => i === id)[1];
+  document.title = `${title} (archived) · ML Visual Atlas`;
+  main.append(el('div', { class: 'callout warn' }, el('span', { class: 'lbl' }, 'Archived page'), 'This is an earlier version of the site, kept for reference. ', el('a', { href: '#/archive' }, 'All archived pages')));
+  if (!mod) { main.append(el('h1', {}, title)); return; }
+  try { await mod.default(main, { tab: null, item: { id, title } }); } catch (e) { console.error(e); main.append(el('div', { class: 'callout bad' }, 'This page hit an error while rendering: ' + e.message)); }
   window.scrollTo(0, 0);
 }
 

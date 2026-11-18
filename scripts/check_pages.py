@@ -23,10 +23,19 @@ def routes():
     return out
 
 
+def archive_routes():
+    out = []
+    for d in ("topics", "omics", "frontier"):
+        for f in sorted((ROOT / "js/archive" / d).glob("*.js")):
+            out.append(("archive", f"archive/{d}", f.stem))
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tab"); ap.add_argument("--only"); ap.add_argument("--shots")
     ap.add_argument("--dark", action="store_true")
+    ap.add_argument("--archive", action="store_true", help="check the retired pages under #/archive instead")
     a = ap.parse_args()
     only = set(a.only.split(",")) if a.only else None
     bad = 0
@@ -37,12 +46,13 @@ def main():
         errs = []
         page.on("console", lambda m: errs.append(m.text) if m.type == "error" else None)
         page.on("pageerror", lambda e: errs.append(str(e)))
-        for tab, d, tid in routes():
+        todo = archive_routes() if a.archive else routes()
+        for tab, d, tid in todo:
             if a.tab and tab != a.tab: continue
             if only and tid not in only: continue
             exists = (ROOT / "js" / d / f"{tid}.js").exists()
             errs.clear()
-            page.goto(f"{BASE}#/{tab}/{tid}")
+            page.goto(f"{BASE}#/{tab}/{tid}" if tab != "archive" else f"{BASE}#/archive/{d.split('/')[1]}/{tid}")
             page.wait_for_timeout(1500)
             body = page.inner_text("main")
             placeholder = "still being written" in body
