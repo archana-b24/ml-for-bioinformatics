@@ -1,32 +1,37 @@
 # ML for Bioinformatics
 
-**View it here: https://archana-b24.github.io/ml-for-bioinformatics/**
+**Check it out here:** https://archana-b24.github.io/ml-for-bioinformatics/
 
-I made this to understand machine learning properly, by seeing it rather than only reading about it, and to see where these methods actually fit in omics work.
+I've been spending a lot of time trying to get a better understanding of machine learning, not just how to use different models, but how they actually work and when they make sense to use in bioinformatics.
 
-It's also my notebook of fundamentals. When I forget how cross-validation leaks, why PCA picks the axes it does, or when a plain t-test beats a fancy model, I come back here.
+I ended up building this little interactive website as a way to learn things visually instead of just reading through explanations. It's also become a place I can go back to whenever I need to brush up on something, whether that's cross-validation, PCA, or why a simple statistical test might be a better choice than a complicated ML model.
 
-## What's inside
+## What's inside?
 
-There are three tabs, and every page is carefully picked and written to be read slowly:
+I've split it into three sections:
 
-1. **ML concepts.** The basics, one topic per page: train/test splits, cross-validation, gradient descent, regression, trees, PCA, clustering, UMAP, neural networks, transformers, multiple testing, and a few more.
-2. **ML in omics.** One made-up immunotherapy lung-cancer study, followed from bulk RNA-seq to single-cell to spatial data. Each step asks a simple question: is this a job for machine learning, or for plain statistics?
-3. **Frontier methods.** Some of the newer ideas (single-cell foundation models, virtual cells, predicting gene expression from H&E slides), each rebuilt as a small toy, with an honest look at what holds up.
+1. **ML Concepts:** Covers the fundamentals like regression, decision trees, PCA, clustering, gradient descent, neural networks, transformers, cross-validation, and more. Each topic has its own page with interactive examples.
 
-Every page follows the same flow: what it is, why it matters, where it's used, how it works step by step, common mistakes, and a short recap.
+2. **ML in Omics:** Walks through a fictional lung cancer immunotherapy study using bulk RNA-seq, single-cell, and spatial transcriptomics. The idea is to understand where ML is useful, where traditional statistics works better, and how to decide between the two.
 
-## Why simple pictures
+3. **Frontier Methods:** A space to explore some of the newer approaches I've been curious about, like single-cell foundation models, virtual cells, and predicting gene expression from histology images. I've broken these down into smaller examples to make the underlying ideas easier to follow.
 
-No dashboard and nothing fancy. Each idea gets a small interactive picture: drag a slider, move a point, and watch what changes. A simple picture you can poke at usually teaches more than a big dashboard.
+## How does it work?
 
-All the data is made up, so nothing here is a real result. It's built to make the ideas clear.
+I wanted to keep everything simple and visual. Instead of long explanations or complicated dashboards, most pages have small interactive examples where you can move things around, adjust parameters, and see what changes.
 
-## Run it on your own computer
+Each topic walks through what the method does, why it's useful, how it works, where it shows up in bioinformatics, and some common pitfalls to watch out for.
+
+All the datasets are synthetic, so the examples are meant for learning rather than drawing any real biological conclusions.
+
+## Want to run it locally?
+
+It's built with plain HTML and JavaScript, so there's no complicated setup.
 
 ```bash
 python3 -m http.server 8765
-# then open http://localhost:8765
 ```
 
-It's plain HTML and JavaScript, so there's nothing to install or build.
+Then open http://localhost:8765 in your browser.
+
+This is very much a learning project for me, and something I plan to keep adding to as I explore more methods. If you're also learning ML or working with omics data, hopefully you'll find some of it useful too!
